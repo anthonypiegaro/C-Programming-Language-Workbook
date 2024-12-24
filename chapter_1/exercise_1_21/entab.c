@@ -5,7 +5,7 @@
 int main() {
     int c;
     int num_spaces;
-    int spaces_to_last_tab_stop;
+    int spaces_to_last_tab_start;
 
     num_spaces = 0;
     for (int length = 1; (c = getchar()) != EOF; ++length) {
@@ -13,20 +13,20 @@ int main() {
             ++num_spaces;
         } else {
             if (num_spaces > 0) {
-                spaces_to_last_tab_stop = length - ((length / TAB_SPACE) * TAB_SPACE); // 0
+                spaces_to_last_tab_start = length - ((((length / TAB_SPACE) - 1) * TAB_SPACE) + 1);
 
-                if (num_spaces <= spaces_to_last_tab_stop) { // wont run
+                if (num_spaces <= spaces_to_last_tab_start) {
                     for (int i = 0; i < num_spaces; ++i) {
                         putchar(' ');
                     }
                 } else {
-                    num_spaces = num_spaces - spaces_to_last_tab_stop; // 7 = 7 - 0
-                    while (num_spaces > 0) { //  will run once
+                    num_spaces = num_spaces - spaces_to_last_tab_start;
+                    while (num_spaces > 0) {
                         putchar('\t');
-                        num_spaces = num_spaces - TAB_SPACE; // -1 = 7 - 8
+                        num_spaces = num_spaces - TAB_SPACE;
                     }
 
-                    for (int i = 0; i < spaces_to_last_tab_stop; ++i) {
+                    for (int i = 0; i < spaces_to_last_tab_start; ++i) {
                         putchar(' ');
                     }
                 }
