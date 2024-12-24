@@ -5,48 +5,35 @@
 int main() {
     int c;
     int num_spaces;
-    int spaces_to_last_tab_start;
+    int line_pos;
 
-    num_spaces = 0;
-    for (int length = 1; (c = getchar()) != EOF; ++length) {
+    num_spaces = line_pos = 0;
+
+    while ((c = getchar()) != EOF) {
+        ++line_pos;
+
         if (c == ' ') {
             ++num_spaces;
-        } else {
-            if (num_spaces > 0) {
-                spaces_to_last_tab_start = length - ((((length / TAB_SPACE) - 1) * TAB_SPACE) + 1);
 
-                if (num_spaces <= spaces_to_last_tab_start) {
-                    for (int i = 0; i < num_spaces; ++i) {
-                        putchar(' ');
-                    }
-                } else {
-                    num_spaces = num_spaces - spaces_to_last_tab_start;
-                    while (num_spaces > 0) {
-                        putchar('\t');
-                        num_spaces = num_spaces - TAB_SPACE;
-                    }
-
-                    for (int i = 0; i < spaces_to_last_tab_start; ++i) {
-                        putchar(' ');
-                    }
-                }
-
+            if (line_pos % TAB_SPACE == 0 && num_spaces > 1) {
+                putchar('\t');
                 num_spaces = 0;
             }
-
-            if (c == '\t') {
-                length = ((length / TAB_SPACE) * TAB_SPACE) - 1;
+        } else {
+            while (num_spaces) {
+                putchar(' ');
+                --num_spaces;
             }
 
             if (c == '\n') {
-                length = 0;
+                line_pos = 0;
+            } else if (c == '\t') {
+                line_pos = (((line_pos - 1) / TAB_SPACE) + 1) * TAB_SPACE + 1;
             }
 
             putchar(c);
         }
     }
-
-    putchar('\n');
 
     return 0;
 }
