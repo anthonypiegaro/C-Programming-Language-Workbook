@@ -3,7 +3,6 @@
 #define IN 1
 #define OUT 0
 
-// only handle single line comments to start
 int main() {
     int c;
     int prev_c;
@@ -12,7 +11,6 @@ int main() {
     comment = OUT;
     while ((c = getchar()) != EOF) {
         if (c == '/' && prev_c == '/') {
-            // we now know that we are in a comment, so lets go through the rest of this line
             while ((c = getchar()) != EOF && c != '\n') {
                 ;
             }
@@ -23,6 +21,16 @@ int main() {
 
             putchar('\n');
             prev_c = '\n';
+        } else if (prev_c == '/' && c == '*') {
+           while ((c = getchar()) != EOF && !(prev_c == '*' && c == '/')) {
+                prev_c = c;
+            }
+
+            if (c == EOF) {
+                return 0;
+            }
+
+            prev_c = 0;
         } else if (c == '/') {
             prev_c = '/';
         } else {
