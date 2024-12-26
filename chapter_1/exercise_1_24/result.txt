@@ -1,8 +1,7 @@
-/* Test program with various syntax elements */
+
 #include <stdio.h>
 
-/* Multi-line comment with braces { }
-   and parentheses ( ) */
+
 
 char *str = "string with (parens) and {braces}";
 char chr = ')';  
@@ -12,14 +11,14 @@ int main() {
     char *s = "text with \"escaped quotes\"";
     
     if (x == 0) {
-        printf("x is zero"); /* nested { comment } */
+        printf("x is zero"); 
     }
 
     
     int arr[3] = {1, 2, 3};
 
-    /* Comment 
-    char *problematic = "string containing /* fake comment */";
+    
+    char *problematic = "string containing ";
 
     return 0;  
 }
