@@ -6,7 +6,7 @@
 // paranthesis []
 // braces []
 // single quotes []
-// double quotes []
+// double quotes [x]
 // escape sequences []
 int main() {
     int c;
@@ -27,6 +27,19 @@ int main() {
             putchar('\n');
 
             prev_c = 0;
+        } else if (c == '"') { // We are checking if in a string
+            putchar('"');
+
+            while ((c = getchar()) != EOF && c != '"') {
+                putchar(c);
+            }
+
+            if (c == EOF) {
+                printf("error: no matching closing double quote");
+                return 1;
+            }
+
+            putchar('"');
         } else if (prev_c == '/' && c == '*') { // We are checking if entering a multiline comment
             // We can remove everything until the stop marker -> */
             prev_c = 0;
