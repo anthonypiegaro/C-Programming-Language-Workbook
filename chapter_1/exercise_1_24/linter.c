@@ -1,9 +1,11 @@
 #include <stdio.h>
 
+#define MAX_ARRAY_SIZE 50
+
 // single comments [x]
 // multiline comments [x]
 // brackets []
-// paranthesis []
+// parenthesis [x]
 // braces []
 // single quotes [x]
 // double quotes [x]
@@ -11,7 +13,10 @@
 int main() {
     int c;
     int prev_c;
+    char parenthesis_stack[MAX_ARRAY_SIZE];
+    int parenthesis_stack_length;
 
+    parenthesis_stack_length = 0;
     prev_c = 0;
     while ((c = getchar()) != EOF) {
         if (c == '/' && prev_c == '/') { // you have entered a single line comment
@@ -40,7 +45,7 @@ int main() {
             }
 
             putchar('"');
-        } else if (c == '\'') {
+        } else if (c == '\'') { // Checking character constant
             putchar('\'');
 
             c = getchar();
@@ -104,6 +109,22 @@ int main() {
             prev_c = 0;
         } else if (c == '/') {
             prev_c = '/';
+        } else if (c == '(') {
+            // add to the stack
+            parenthesis_stack[parenthesis_stack_length] = '(';
+            ++parenthesis_stack_length;
+            putchar('(');
+        } else if (c == ')') {
+            putchar(')');
+
+            if (parenthesis_stack_length == 0 || parenthesis_stack[parenthesis_stack_length - 1] != '(') {
+                // invalid
+                printf("error: extra closing parenthesis");
+                return 0;
+            }
+
+            // if we are here, then it was valid
+            --parenthesis_stack_length;
         } else {
             if (prev_c == '/') {
                 putchar('/');
@@ -116,6 +137,11 @@ int main() {
                 prev_c = c;
             }
         }
+    }
+
+    if (parenthesis_stack_length > 0) {
+        printf("error: extra opening parenthesis");
+        return 1;
     }
 
     return 0;

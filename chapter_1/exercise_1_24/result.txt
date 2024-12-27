@@ -11,14 +11,4 @@ int main() {
     char *s = "text with \"escaped quotes\"";
     
     if (x == 0) {
-        printf("x is zero"); 
-    }
-
-    
-    int arr[3] = {1, 2, 3};
-
-    
-    char *problematic = "string containing /* fake comment */";
-
-    return 0;  
-}
+        printf("x is zero"))error: extra closing parenthesis
