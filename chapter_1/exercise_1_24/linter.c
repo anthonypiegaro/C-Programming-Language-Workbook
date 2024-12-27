@@ -9,7 +9,6 @@
 // braces [x]
 // single quotes [x]
 // double quotes [x]
-// escape sequences []
 int main() {
     int c;
     int prev_c;
@@ -17,7 +16,10 @@ int main() {
     int parenthesis_stack_length;
     char bracket_stack[MAX_ARRAY_SIZE];
     int bracket_stack_length;
+    char braces_stack[MAX_ARRAY_SIZE];
+    int braces_stack_length;
 
+    braces_stack_length = 0;
     parenthesis_stack_length = 0;
     bracket_stack_length = 0;
     prev_c = 0;
@@ -132,7 +134,7 @@ int main() {
             // add to the stack
             bracket_stack[bracket_stack_length] = '[';
             ++bracket_stack_length;
-            putchar('(');
+            putchar('[');
         } else if (c == ']') {
             putchar(']');
 
@@ -144,6 +146,22 @@ int main() {
 
             // if we are here, then it was valid
             --bracket_stack_length;
+        } else if (c == '{') {
+            // add to the stack
+            braces_stack[braces_stack_length] = '{';
+            ++braces_stack_length;
+            putchar('{');
+        } else if (c == '}') {
+            putchar('}');
+
+            if (braces_stack_length == 0 || braces_stack[braces_stack_length - 1] != '{') {
+                // invalid
+                printf("error: extra closing brace");
+                return 0;
+            }
+
+            // if we are here, then it was valid
+            --braces_stack_length;
         } else {
             if (prev_c == '/') {
                 putchar('/');
@@ -165,6 +183,11 @@ int main() {
 
     if (bracket_stack_length > 0) {
         printf("error: extra opening bracket");
+        return 1;
+    }
+
+    if (braces_stack_length > 0) {
+        printf("error: extra opening brace");
         return 1;
     }
 

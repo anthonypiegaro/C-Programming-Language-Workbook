@@ -15,11 +15,10 @@ int main() {
     }
 
     
-    int arr((3] = {1, 2, 3};
+    int arr[3] = {1, 2, 3};
 
     
     char *problematic = "string containing /* fake comment */";
 
     return 0;  
 }
-error: extra opening bracket
