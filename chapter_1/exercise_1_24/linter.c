@@ -4,9 +4,9 @@
 
 // single comments [x]
 // multiline comments [x]
-// brackets []
+// brackets [x]
 // parenthesis [x]
-// braces []
+// braces [x]
 // single quotes [x]
 // double quotes [x]
 // escape sequences []
@@ -15,8 +15,11 @@ int main() {
     int prev_c;
     char parenthesis_stack[MAX_ARRAY_SIZE];
     int parenthesis_stack_length;
+    char bracket_stack[MAX_ARRAY_SIZE];
+    int bracket_stack_length;
 
     parenthesis_stack_length = 0;
+    bracket_stack_length = 0;
     prev_c = 0;
     while ((c = getchar()) != EOF) {
         if (c == '/' && prev_c == '/') { // you have entered a single line comment
@@ -125,6 +128,22 @@ int main() {
 
             // if we are here, then it was valid
             --parenthesis_stack_length;
+        } else if (c == '[') {
+            // add to the stack
+            bracket_stack[bracket_stack_length] = '[';
+            ++bracket_stack_length;
+            putchar('(');
+        } else if (c == ']') {
+            putchar(']');
+
+            if (bracket_stack_length == 0 || bracket_stack[bracket_stack_length - 1] != '[') {
+                // invalid
+                printf("error: extra closing bracket");
+                return 0;
+            }
+
+            // if we are here, then it was valid
+            --bracket_stack_length;
         } else {
             if (prev_c == '/') {
                 putchar('/');
@@ -141,6 +160,11 @@ int main() {
 
     if (parenthesis_stack_length > 0) {
         printf("error: extra opening parenthesis");
+        return 1;
+    }
+
+    if (bracket_stack_length > 0) {
+        printf("error: extra opening bracket");
         return 1;
     }
 
