@@ -5,7 +5,7 @@
 // brackets []
 // paranthesis []
 // braces []
-// single quotes []
+// single quotes [x]
 // double quotes [x]
 // escape sequences []
 int main() {
@@ -40,6 +40,56 @@ int main() {
             }
 
             putchar('"');
+        } else if (c == '\'') {
+            putchar('\'');
+
+            c = getchar();
+
+            if (c == EOF) {
+                printf("error: single quote not closed");
+                return 1;
+            }
+
+            if (c == '\\') { // this means an escape char is used
+                c = getchar();
+
+                if (c == EOF) {
+                    printf("error: single quote not closed");
+                    return 1;
+                }
+
+                if (
+                    // Not going to include unicode or hex stuff
+                    c == '\n' ||  // Newline
+                    c == '\t' ||  // Horizontal Tab
+                    c == '\b' ||  // Backspace
+                    c == '\r' ||  // Carriage Return
+                    c == '\\' ||  // Backslash
+                    c == '\'' ||  // Single Quote
+                    c == '\"' ||  // Double Quote
+                    c == '\a' ||  // Alert (Bell)
+                    c == '\f' ||  // Form Feed
+                    c == '\v' ||  // Vertical Tab
+                    c == '\0'     // Null Character
+                ) {
+                    putchar(c);
+                } else {
+                    printf("error: multi-character character constant");
+                    return 1;
+                }
+            } else { // this means an escape was not used
+                putchar(c);
+            }
+
+            if ((c = getchar()) != '\'') {
+                printf("error: mulit-character character constant");
+                return 1;
+            }
+
+            putchar('\'');
+
+            prev_c = 0;
+
         } else if (prev_c == '/' && c == '*') { // We are checking if entering a multiline comment
             // We can remove everything until the stop marker -> */
             prev_c = 0;
