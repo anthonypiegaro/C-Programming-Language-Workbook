@@ -61,6 +61,14 @@ int main() {
                     printf("error: stack empty");
                 }
                 break;
+            case 'd':
+                if (sp > 0) {
+                    val[sp] = val[sp - 1];
+                    ++sp;
+                } else {
+                    printf("error: stack empty");
+                }
+                break;
             case '\n':
                 printf("\t%.8g\n", pop());
                 break; 
