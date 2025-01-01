@@ -22,6 +22,7 @@ int main() {
     int type;
     double op2;
     char s[MAXOP];
+    char temp;
 
     while ((type = getop(s)) != EOF) {
         switch (type) {
@@ -67,6 +68,15 @@ int main() {
                     ++sp;
                 } else {
                     printf("error: stack empty");
+                }
+                break;
+            case 's':
+                if (sp > 1) {
+                    temp = val[sp - 2];
+                    val[sp - 2] = val[sp - 1];
+                    val[sp - 1] = temp;
+                } else {
+                    printf("error: less than two elements in the stack");
                 }
                 break;
             case '\n':
