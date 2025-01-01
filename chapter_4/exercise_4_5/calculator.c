@@ -75,6 +75,9 @@ int main() {
             case SIN:
                 push(sin(pop()));
                 break;
+            case 'e':
+                push(exp(pop()));
+                break;
             case '\n':
                 printf("\t%.8g\n", pop());
                 break; 
