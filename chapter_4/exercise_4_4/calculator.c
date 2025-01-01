@@ -17,12 +17,14 @@ void push(double);
 double pop(void);
 int getch(void);
 void ungetch(int);
+void peek(void);
+void swap(void);
+void duplicate(void);
 
 int main() {
     int type;
     double op2;
     char s[MAXOP];
-    char temp;
 
     while ((type = getop(s)) != EOF) {
         switch (type) {
@@ -56,28 +58,13 @@ int main() {
                 }
                 break;
             case 'p':
-                if (sp > 0) {
-                    printf("\t%.8g\n", val[sp - 1]);
-                } else {
-                    printf("error: stack empty");
-                }
+                peek();
                 break;
             case 'd':
-                if (sp > 0) {
-                    val[sp] = val[sp - 1];
-                    ++sp;
-                } else {
-                    printf("error: stack empty");
-                }
+                duplicate();
                 break;
             case 's':
-                if (sp > 1) {
-                    temp = val[sp - 2];
-                    val[sp - 2] = val[sp - 1];
-                    val[sp - 1] = temp;
-                } else {
-                    printf("error: less than two elements in the stack");
-                }
+                swap();
                 break;
             case '\n':
                 printf("\t%.8g\n", pop());
@@ -147,4 +134,33 @@ void ungetch(int c) {
         printf("ungetch: too many characters\n");
     else
         buf[bufp++] = c;
+}
+
+void peek(void) {
+    if (sp > 0) {
+        printf("\t%.8g\n", val[sp - 1]);
+    } else {
+        printf("error: stack empty");
+    }
+}
+
+void swap(void) {
+    double temp;
+
+    if (sp > 1) {
+        temp = val[sp - 2];
+        val[sp - 2] = val[sp - 1];
+        val[sp - 1] = temp;
+    } else {
+        printf("error: less than two elements in the stack");
+    }
+}
+
+void duplicate(void) {
+    if (sp > 0) {
+        val[sp] = val[sp - 1];
+        ++sp;
+    } else {
+        printf("error: stack empty");
+    }
 }
