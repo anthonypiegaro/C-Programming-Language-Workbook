@@ -20,6 +20,7 @@ void ungetch(int);
 void peek(void);
 void swap(void);
 void duplicate(void);
+void clear(void);
 
 int main() {
     int type;
@@ -65,6 +66,9 @@ int main() {
                 break;
             case 's':
                 swap();
+                break;
+            case 'c':
+                clear();
                 break;
             case '\n':
                 printf("\t%.8g\n", pop());
@@ -163,4 +167,8 @@ void duplicate(void) {
     } else {
         printf("error: stack empty");
     }
+}
+
+void clear(void) {
+    sp = 0;
 }
