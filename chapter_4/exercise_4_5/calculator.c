@@ -8,6 +8,7 @@
 #define MAXVAL 100
 #define BUFFSIZE 100
 #define SIN 2000
+#define POW 2001
 
 int sp = 0;
 double val[MAXVAL];
@@ -78,6 +79,9 @@ int main() {
             case 'e':
                 push(exp(pop()));
                 break;
+            case POW:
+                push(pow(pop(), pop()));
+                break;
             case '\n':
                 printf("\t%.8g\n", pop());
                 break; 
@@ -113,7 +117,7 @@ int getop(char s[]) {
         ;
 
     s[1] = '\0';
-    if (!isdigit(c) && c != '.' && c != '-' && c != 's')
+    if (!isdigit(c) && c != '.' && c != '-' && c != 's' && c != 'p')
         return c;
     i = 0;
     if (c == '-') {
@@ -134,6 +138,19 @@ int getop(char s[]) {
                 return 's';
             } else {
                 return SIN;
+            }
+        }
+    } else if (c == 'p') {
+        if ((c = getch()) != 'o') {
+            ungetch(c);
+            return 'p';
+        } else {
+            if ((c = getch()) != 'w') {
+                ungetch(c);
+                ungetch(c);
+                return 'p';
+            } else {
+                return POW;
             }
         }
     }
