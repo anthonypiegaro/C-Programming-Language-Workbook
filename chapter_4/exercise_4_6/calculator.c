@@ -170,10 +170,8 @@ int getop(char s[]) {
     } else if (isupperchar(c)) {
         var_name = c;
         if ((c = getch()) == '=') {
-            printf("Here 4\n");
             c = getch();
             if (isdigit(c)) {
-                printf("Here 5 and c is %d", c);
                 var_init[var_name - 'A'] = 1;
                 isvar = 1;
                 s[0] = c;
@@ -195,8 +193,6 @@ int getop(char s[]) {
         }
     }
 
-    printf("Here 7 and c is %d", c);
-
     if (isdigit(c))
         while (isdigit(s[++i] = c = getch()))
             ;
@@ -209,8 +205,6 @@ int getop(char s[]) {
         ungetch(c);
 
     if (isvar) {
-        printf("here\n");
-        printf("And the value that should be assigned: %s\n", s);
         var[var_name - 'A'] = atof(s);
         
         return VAR_ASSIGN;
