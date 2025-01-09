@@ -13,11 +13,13 @@ int *configs[] = { NULL, NULL, NULL, NULL, NULL };
 int fields_used[] = { 0, 0, 0, 0 };
 int configs_storage[20];
 int configs_storage_p = 0;
+char second_storage[STORAGE];
+char *mid_p_storage[STORAGE];
 
 int strcmp(char *s, char *t);
 int read_lines(char *lines[]);
 void strcpy(char *s, char *t);
-int read_line(char *line);
+int read_line(char *line, char *line_2, int pointer_starts[]);
 void write_lines(char *lines[], int num_of_lines);
 void qsort(void *v[], int left, int right, int (*comp) (void *, void *), int reverse);
 void swap(void *v[], int i, int j);
@@ -31,10 +33,12 @@ int isupper(char c);
 int islower(char c);
 int to_lower(char c);
 int process_flags(int argc, char *argv[]);
+int read_lines_new(char *lines[], char **field_lines[]);
 
 int main(int argc, char *argv[]) {
     int nlines;
     char *lines[MAX_LINES];
+    char **field_lines[MAX_LINES];
 
     if (!process_flags(argc, argv)) {
         printf("Invalid args. Terminating program\n");
@@ -67,8 +71,13 @@ int main(int argc, char *argv[]) {
             *(*(configs + i) + 1), *(*(configs + i) + 2), *(*(configs + i) + 3), *(*(configs + i) + 4));
     }
 
-    nlines = read_lines(lines);
-    printf("Number of input lines: %d\n", nlines);
+    nlines = read_lines_new(lines, field_lines);
+
+    if (nlines == -1) {
+        printf("read_lines error: terminating program\n");
+        return 1;
+    }
+    printf("\nNumber of input lines: %d\n", nlines);
 
     if (*configs == NULL) {
         printf("No config given\n\n");
@@ -154,17 +163,54 @@ int folded_strcmp(char *s, char*t) {
     }
 }
 
-int read_lines(char *lines[]) {
+// int read_lines(char *lines[]) {
+//     int length;
+//     char line[MAX_LINE_LENGTH];
+//     int num_of_lines = 0;
+//     int storage_length = 0;
+
+//     while (length = read_line(line)) {
+//         if ((storage_length + length + 1) < STORAGE) {
+//             strcpy((storage + storage_length), line);
+//             *(lines + num_of_lines++) = (storage + storage_length);
+//             storage_length += length + 1;
+//         } else {
+//             printf("Too much content. not enough storage. stopping at current line");
+//             return num_of_lines;
+//         }
+//     }
+
+//     return num_of_lines;
+// }
+
+int read_lines_new(char *lines[], char **field_lines[]) {
     int length;
     char line[MAX_LINE_LENGTH];
+    char line_2[MAX_LINE_LENGTH];
+    int pointer_starts[3];
     int num_of_lines = 0;
     int storage_length = 0;
+    int mid_p_storage_length = 0;
 
-    while (length = read_line(line)) {
+    while (length = read_line(line, line_2, pointer_starts)) {
+        if (length < 0) {
+            printf("error: following line not in proper format -> %s\n", line);
+            return -1;
+        }
         if ((storage_length + length + 1) < STORAGE) {
             strcpy((storage + storage_length), line);
-            *(lines + num_of_lines++) = (storage + storage_length);
+            *(lines + num_of_lines) = (storage + storage_length);
+
+            strcpy((second_storage + storage_length), line_2);
+            *(mid_p_storage + mid_p_storage_length) = (second_storage + storage_length + pointer_starts[0]);
+            *(mid_p_storage + mid_p_storage_length + 1) = (second_storage + storage_length + pointer_starts[1]);
+            *(mid_p_storage + mid_p_storage_length + 2) = (second_storage + storage_length + pointer_starts[2]);
+            mid_p_storage_length += 3;
+
+            *(field_lines + num_of_lines) = (mid_p_storage + mid_p_storage_length);
+
             storage_length += length + 1;
+            ++num_of_lines;
         } else {
             printf("Too much content. not enough storage. stopping at current line");
             return num_of_lines;
@@ -179,18 +225,31 @@ void strcpy(char *s, char *t) {
         ;
 }
 
-int read_line(char *line) {
+int read_line(char *line, char *line_2, int pointer_starts[]) {
     int length;
     char c;
+    int comma_count = 0;
 
-    for (length = 0; length < (MAX_LINE_LENGTH - 1) && (c = getchar()) != EOF && c != '\n'; ++length)
+    for (length = 0; length < (MAX_LINE_LENGTH - 1) && (c = getchar()) != EOF && c != '\n'; ++length) {
         *(line + length) = c;
+        
+        if (c == ',') {
+            ++comma_count;
+            *(line_2 + length) = '\0';
+        }
+    }
     
     if (c == '\n') {
+        *(line_2 + length) = '\n';
         *(line + length++) = '\n';
     }
 
     *(line + length) = '\0';
+    *(line_2 + length) = '\0';
+
+    if (comma_count < 2 && !(length == 0 && c == EOF)) {
+        return -1;
+    }
 
     return length;
 }
